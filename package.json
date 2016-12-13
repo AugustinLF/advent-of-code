@@ -1,0 +1,14 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "code & chill",
+  "dependencies": {
+    "jest": "^17.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --watch"
+  },
+  "author": "Augustin Le Fèvre",
+  "license": "ISC"
+}
