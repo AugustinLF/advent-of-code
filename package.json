@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "code & chill",
   "dependencies": {
-    "jest": "^17.0.3"
+    "jest": "^17.0.3",
+    "ramda": "^0.22.1"
   },
   "devDependencies": {},
   "scripts": {
