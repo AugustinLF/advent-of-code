@@ -6,7 +6,9 @@
     "jest": "^17.0.3",
     "ramda": "^0.22.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-plugin-transform-flow-strip-types": "^6.21.0"
+  },
   "scripts": {
     "test": "jest --watch"
   },
