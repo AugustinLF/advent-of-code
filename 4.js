@@ -6,6 +6,7 @@ type Room = {
     sectorId: number,
     checksum: string,
 };
+type DecypheredRoom = Room & {decypheredName: string};
 
 type LetterMap = {[string]: number};
 const getLetterMap = (arr: string, letterMap: LetterMap = {}): LetterMap => {
@@ -14,6 +15,12 @@ const getLetterMap = (arr: string, letterMap: LetterMap = {}): LetterMap => {
 
     // split + join because flow complains "rest of array pattern (Expected array instead of string)"
     const [letter, ...rest] = arr.split('');
+
+    if (letter === '-')
+        return getLetterMap(
+            rest.join(''),
+            letterMap,
+        );
 
     return getLetterMap(
         rest.join(''),
@@ -49,7 +56,7 @@ const getRoomDetails = (s: string): Room => {
     );
     const [sectorId, checksum] = getSectorAndChecksum(arr);
     return {
-        name: R.pipe(R.dropLast(1), R.join(''))(arr),
+        name: R.pipe(R.dropLast(1), R.join('-'))(arr),
         sectorId,
         checksum,
     };
@@ -57,13 +64,41 @@ const getRoomDetails = (s: string): Room => {
 
 const isRoomReal = (room: Room): bool => room.checksum === getChecksum(getLetterMap(room.name));
 
-const sumRealRoomIds = R.pipe(
+const baseCode = 'a'.charCodeAt(0);
+const getDecypheredName = sectorId => R.pipe(
+    R.split(''),
+    R.map((letter: string) =>
+        letter === '-'
+            ? ' '
+            // work modulo 26, remove the initial offset by subtracting the code for a, then readd it
+            : String.fromCharCode(((letter.charCodeAt(0) - baseCode) + sectorId) % 26 + baseCode),
+    ),
+    R.join(''),
+)
+const decypherName: Room => DecypheredRoom = (room: Room) => ({
+    ...room,
+    decypheredName: getDecypheredName(room.sectorId)(room.name),
+});
+
+const getRealRooms = R.pipe(
     R.trim,
     R.split('\n'),
     R.map(getRoomDetails),
     R.filter(isRoomReal),
+);
+
+const sumRealRoomIds = R.pipe(
+    getRealRooms,
     R.map(R.prop('sectorId')),
     R.reduce((acc, id) => acc + id, 0),
+);
+
+const getNorthPoleStorageRoom = R.pipe(
+    getRealRooms,
+    R.map(decypherName),
+    R.filter(R.where({decypheredName: R.contains('north')})),
+    R.head,
+    R.prop('sectorId'),
 );
 
 module.exports = {
@@ -72,4 +107,7 @@ module.exports = {
     getLetterMap,
     getChecksum,
     sumRealRoomIds,
+    decypherName,
+    getRealRooms,
+    getNorthPoleStorageRoom,
 }

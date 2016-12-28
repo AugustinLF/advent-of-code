@@ -6,6 +6,8 @@ const {
     getLetterMap,
     getChecksum,
     sumRealRoomIds,
+    decypherName,
+    getNorthPoleStorageRoom,
 } = require('./4');
 
 const room1 = 'aaaaa-bbb-z-y-x-123[abxyz]';
@@ -21,7 +23,7 @@ test('getLetterMap', () => {
 
 test('getRoomDetails', () => {
     expect(getRoomDetails(room1)).toEqual({
-        name: 'aaaaabbbzyx',
+        name: 'aaaaa-bbb-z-y-x',
         sectorId: 123,
         checksum: 'abxyz',
     });
@@ -46,4 +48,14 @@ test('isRoomReal', () => {
 test('sumRealRoomIds', () => {
     expect(sumRealRoomIds(ex4)).toBe(1514);
     expect(sumRealRoomIds(input)).toBe(245102);
+});
+
+test('decypherName', () => {
+    expect(
+        decypherName({name: 'qzmt-zixmtkozy-ivhz', sectorId: 343}).decypheredName
+    ).toBe('very encrypted name');
+});
+
+test('logDecypheredNames', () => {
+    expect(getNorthPoleStorageRoom(input)).toBe(324);
 });
