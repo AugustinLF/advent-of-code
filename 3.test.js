@@ -14,5 +14,6 @@ test('3.1', () => {
 
 test('3.2', () => {
     expect(countPossibleVerticalTriangles(ex3)).toBe(6);
-    expect(countPossibleVerticalTriangles(input)).toBe(1921);
+    // ~35s test
+    // expect(countPossibleVerticalTriangles(input)).toBe(1921);
 });
