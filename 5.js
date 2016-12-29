@@ -26,6 +26,32 @@ const getPassword = (doorId: string): string => {
     return password;
 }
 
+const getLetter = (hex: string): {letter: string, position: number} => ({
+    letter: hex[6],
+    position: Number(hex[5]),
+});
+// being lazy, imperative code is a pain to extract
+const getHarderPassword = (doorId: string): string => {
+    let index = 0;
+    let password = '        '.split('');
+
+    while (password.includes(' ')) {
+        const hashedValue = doorId + String(index);
+        const hex = getHex(hashedValue);
+        // if (index % 10000 === 0) {}
+        if (isValidHex(hex)) {
+            const {letter, position} = getLetter(hex);
+            if (position < 8 && password[position] === ' ')
+                password[position] = letter;
+        }
+
+        index++;
+    }
+
+    return password.join('');
+}
+
 module.exports = {
     getPassword,
+    getHarderPassword,
 };

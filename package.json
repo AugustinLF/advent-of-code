@@ -8,9 +8,11 @@
   },
   "devDependencies": {
     "babel-plugin-transform-flow-strip-types": "^6.21.0",
-    "babel-preset-stage-0": "^6.16.0"
+    "babel-preset-stage-0": "^6.16.0",
+    "flow-bin": "^0.37.4"
   },
   "scripts": {
+    "flow": "flow",
     "test": "jest --watch"
   },
   "author": "Augustin Le Fèvre",
