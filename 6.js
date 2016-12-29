@@ -24,24 +24,43 @@ const getLetterMaps: Array<Array<string>> => Array<LetterMap> = R.reduce(
 );
 
 type LetterTuple = [string, number];
-const getMostCommonLetter: (LetterMap) => string = R.pipe(
-    R.toPairs,
-    R.sort((first: LetterTuple, second: LetterTuple) => second[1] - first[1]),
-    R.head,
-    R.head,
+type GetLetter = (l: LetterMap) => string;
+const frequencyLetterGetter = (compare: (LetterTuple, LetterTuple) => number): GetLetter =>
+    R.pipe(
+        R.toPairs,
+        R.sort(compare),
+        R.head,
+        R.head,
+    );
+const getMostCommonLetter = frequencyLetterGetter(
+    (first: LetterTuple, second: LetterTuple) => second[1] - first[1],
 );
+const getLeastCommonLetter = frequencyLetterGetter(
+    (first: LetterTuple, second: LetterTuple) => first[1] - second[1],
+)
 
-const getName: Array<LetterMap> => string = R.pipe(
+const getNameWhenMostCommon: Array<LetterMap> => string = R.pipe(
     R.map(getMostCommonLetter),
+    R.join(''),
+);
+const getNameWhenLeastCommon: Array<LetterMap> => string = R.pipe(
+    R.map(getLeastCommonLetter),
     R.join(''),
 );
 
 const getCorrectedVersion = R.pipe(
     parseInput,
     getLetterMaps,
-    getName,
+    getNameWhenMostCommon,
+);
+
+const getCorrectedLeastLikelyVersion = R.pipe(
+    parseInput,
+    getLetterMaps,
+    getNameWhenLeastCommon,
 );
 
 module.exports = {
     getCorrectedVersion,
+    getCorrectedLeastLikelyVersion,
 }
